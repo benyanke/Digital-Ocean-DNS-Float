@@ -33,5 +33,9 @@ Because it's simply a web request, a curl command in your cron file can be all y
 ## More Advanced Setup
 If you have multiple public interfaces, you could parse the output of `ifconfig` and explicitly specify the IP, to ensure it gets updated correctly, no matter which interface the request goes out. The possibilities are endless.
 
+## Todo
+* Read current record value from API instead of DNS query: more robust and lowers load (during DNS propagation delay)
+
+
 ## Miscellany
 I simply wrote this for my own use, and provide no guarantees about it. I'll gladly accept pull requests for feature adds or bug fixes. 
