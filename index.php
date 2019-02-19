@@ -1,8 +1,7 @@
-  <?php
+<?php
 
   // change 'false' to 'true' to enable debugging
    define("DEBUG", false);
-//  define("DEBUG", true);
 
   // Setup basic info
   $currentDir = getcwd();
@@ -16,23 +15,23 @@
 
   // Process required input fields
   foreach($tokensToCheck as $t) {
-  	if ( isset($_GET[$t]) ){
-  		$input[$t] = $_GET[$t];
-  		if(DEBUG) echo "'$t' statement found<br />";
-  	} else {
-  		if(DEBUG) { echo "'$t' statement not found - error<br />"; die; } else { callError(); die; }
-  	}
+      if ( isset($_GET[$t]) ){
+          $input[$t] = $_GET[$t];
+          if(DEBUG) echo "'$t' statement found<br />";
+      } else {
+          if(DEBUG) { echo "'$t' statement not found - error<br />"; die; } else { callError(); die; }
+      }
   }
 
   // Process optional input fields
   foreach($optionalTokensToCheck as $t) {
-  	if ( isset($_GET[$t]) ){
-  		$input[$t] = $_GET[$t];
-  		if(DEBUG) echo " '$t' statement found - optional<br />";
-  	} else {
+      if ( isset($_GET[$t]) ){
+          $input[$t] = $_GET[$t];
+          if(DEBUG) echo " '$t' statement found - optional<br />";
+      } else {
       $input[$t] = null;
-  		if(DEBUG) echo " '$t' statement not found - optional<br />";
-  	}
+          if(DEBUG) echo " '$t' statement not found - optional<br />";
+      }
   }
 
   // Get config info from config file specified above
@@ -40,8 +39,8 @@
 
   // Debugging statement
   if(DEBUG && false) {
-  	echo "<pre>";
-  	print_r($data->clients);
+      echo "<pre>";
+      print_r($data->clients);
   }
 
   // Storing this for later use
@@ -52,16 +51,16 @@
   $foundRow = null;
 
   foreach($data->clients as $c) {
-  	if($input['statictoken'] == $c->statictoken) {
-  		if(DEBUG) echo "Found entry {$c->description} with token {$c->statictoken}<br />";
-  		$foundRow = $c;
-  		break;
-  	}
+      if($input['statictoken'] == $c->statictoken) {
+          if(DEBUG) echo "Found entry {$c->description} with token {$c->statictoken}<br />";
+          $foundRow = $c;
+          break;
+      }
   }
 
   // Check to see if loop found entry or not
   if($foundRow == null) {
-  	if(DEBUG) echo "Found no valid entry with token {$input['statictoken']}<br />";
+      if(DEBUG) echo "Found no valid entry with token {$input['statictoken']}<br />";
     callError();
     die;
   }
@@ -107,10 +106,10 @@
       echo "Record changing from " . gethostbyname($domainToTest) . " to {$input['ip']}<br />";
 
 
-  	$key = $data->apikeys->{$d->apikey};
+      $key = $data->apikeys->{$d->apikey};
 
-  	// Get record ID so we can find which one to change
-  	$recordId = findRecordIdByName($d->topdomain, $d->subdomain, $key);
+      // Get record ID so we can find which one to change
+      $recordId = findRecordIdByName($d->topdomain, $d->subdomain, $key);
 
     if(is_null($recordId)) {
       // Record not found
@@ -133,13 +132,13 @@
   }
 
   function shutdown() {
-  	global $error;
+      global $error;
 
-  	if(isset($error) && $error) {
-  		echo "Invalid request.";
-  	} else {
+      if(isset($error) && $error) {
+          echo "Invalid request.";
+      } else {
       if(DEBUG) echo "Success.";
-  	}
+      }
 
   }
 
@@ -176,7 +175,7 @@
       $topDomain = trim($topDomain);
 
       // Find the API's ID for the record in question
-  		$request = "https://api.digitalocean.com/v2/domains/" . $topDomain . "/records";
+          $request = "https://api.digitalocean.com/v2/domains/" . $topDomain . "/records";
       $found = false;
       $loopTimes = 1;
 
@@ -185,11 +184,12 @@
         $results = json_decode(curlRequest($request, $key));
         $aRecordId = null;
 
+  // statements to use when debugging
   //      print_r($results);
-
   //      echo "<pre>";
 
         foreach($results->domain_records as $r) {
+  // statements to use when debugging
   //        print_r($r);
   //        echo "$r->name </br>";
           if($subDomain == $r->name) {
@@ -198,7 +198,6 @@
               break;
           }
         }
-  //      print_r($results->links->pages->next)
 
         // Go to next page if not found, and next page exists
         if(isset($results->links->pages->next) && !$found) {
@@ -232,14 +231,14 @@
 
   function curlRequest($url, $key, $putData = null) {
 
-  	$crl = curl_init();
+      $crl = curl_init();
 
-  	$headr = array();
-  	//$headr[] = 'Content-length: 0';
-  	$headr[] = 'Content-Type: application/json';
-  	$headr[] = 'Authorization: Bearer ' . $key;
+      $headr = array();
+      //$headr[] = 'Content-length: 0';
+      $headr[] = 'Content-Type: application/json';
+      $headr[] = 'Authorization: Bearer ' . $key;
 
-  	curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
+      curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
     curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($crl, CURLOPT_FOLLOWLOCATION, true);
 
@@ -248,13 +247,10 @@
       curl_setopt($crl, CURLOPT_POSTFIELDS,$putData);
     }
 
-  //	curl_setopt($crl, CURLOPT_POST,true);
 
-  	curl_setopt($crl, CURLOPT_URL, $url);
+      curl_setopt($crl, CURLOPT_URL, $url);
+      $rest = curl_exec($crl);
+      curl_close($crl);
 
-  	$rest = curl_exec($crl);
-
-  	curl_close($crl);
-
-  	return $rest;
+      return $rest;
   }
