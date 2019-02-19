@@ -38,4 +38,4 @@ If you have multiple public interfaces, you could parse the output of `ifconfig`
 
 
 ## Miscellany
-I simply wrote this for my own use, and provide no guarantees about it. I'll gladly accept pull requests for feature adds or bug fixes. 
+I wrote this for my own use, and provide no guarantees about it. I'll gladly accept pull requests for feature additions or bug fixes. It works for my own use, and has been running for 2+ years with no issues.
